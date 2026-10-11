@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DARK SHADOW — Enter the Simulation</title>
+<style>
+:root{--bg:#030304;--red:#ff1f3d;--grn:#00ff7f;--card:#0b0e0c;--txt:#c8ffe0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:"Courier New",ui-monospace,monospace;overflow-x:hidden}
+#rain{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.45}
+.scan{position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.25) 0 2px,transparent 2px 4px);animation:flick 3s infinite}
+@keyframes flick{0%,100%{opacity:.8}50%{opacity:.5}}
+#leave{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:8px;z-index:50;background:#000;color:var(--grn);border:1px solid var(--grn);padding:8px 12px;font:inherit;font-size:13px;text-decoration:none;border-radius:6px}
+#snd{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);left:8px;z-index:50;background:#000;color:var(--grn);border:1px solid var(--grn);padding:8px 12px;font:inherit;font-size:13px;border-radius:6px}
+section{position:relative;z-index:2;min-height:100vh;padding:64px 16px 32px;max-width:720px;margin:0 auto}
+#intro{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;transition:opacity 1s}
+#intro.shake{animation:shake .4s infinite}
+@keyframes shake{0%,100%{transform:translate(0)}25%{transform:translate(-1px,1px)}50%{transform:translate(1px,-1px)}75%{transform:translate(-1px,-1px)}}
+h1.glitch{font-size:clamp(28px,9vw,54px);margin:0;color:var(--red);text-shadow:0 0 8px var(--red),0 0 24px var(--red);position:relative;letter-spacing:2px;animation:gl 2.2s infinite}
+@keyframes gl{0%,90%,100%{transform:none;text-shadow:0 0 8px var(--red),0 0 24px var(--red)}92%{transform:translateX(-4px);text-shadow:3px 0 var(--grn),-3px 0 #0ff}95%{transform:translateX(4px);text-shadow:-3px 0 var(--grn),3px 0 #0ff}}
+.warn{width:100%;height:6px;background:var(--red);box-shadow:0 0 14px var(--red);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:.15}}
+.skull{width:150px;filter:drop-shadow(0 0 10px var(--red))}
+.ring{position:relative;width:130px;height:130px}
+.ring svg{transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:26px;color:var(--grn);text-shadow:0 0 8px var(--grn)}
+.bar{width:100%;height:14px;border:1px solid var(--grn);border-radius:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--grn));box-shadow:0 0 12px var(--grn)}
+.term{width:100%;min-height:150px;text-align:left;background:rgba(0,0,0,.75);border:1px solid var(--grn);border-radius:8px;padding:12px;font-size:13px;line-height:1.6;box-shadow:0 0 14px rgba(0,255,127,.25)}
+.cur::after{content:"█";animation:blink 1s steps(2) infinite}
+#report{display:none;opacity:0;transition:opacity 1.2s}
+#report.on{opacity:1}
+h2{color:var(--grn);text-shadow:0 0 10px var(--grn);font-size:clamp(22px,6vw,34px);text-align:center;margin:0 0 6px}
+.sub{text-align:center;color:#7fbf9f;font-size:12px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--grn);border-radius:10px;padding:14px;margin:14px 0;box-shadow:0 0 16px rgba(0,255,127,.2)}
+.card h3{margin:0 0 10px;font-size:15px;color:var(--grn);letter-spacing:1px}
+.row{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed #12301f;font-size:13px}
+.ok{color:var(--grn)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.grid{grid-template-columns:1fr}}
+.radar{width:140px;height:140px;border-radius:50%;margin:6px auto;border:1px solid var(--grn);position:relative;background:radial-gradient(circle,transparent 30%,rgba(0,255,127,.15) 31% 32%,transparent 33% 60%,rgba(0,255,127,.15) 61% 62%,transparent 63%)}
+.radar::after{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(rgba(0,255,127,.55),transparent 25%);animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.meter{height:10px;border:1px solid var(--grn);border-radius:6px;overflow:hidden;margin-top:8px}
+.meter i{display:block;height:100%;width:40%;background:var(--grn);animation:meter 2.5s ease-in-out infinite alternate}
+@keyframes meter{to{width:92%}}
+.net line{stroke:var(--grn);stroke-width:1.5;stroke-dasharray:4 4;animation:dash 1s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-16}}
+.net circle{fill:#000;stroke:var(--grn);stroke-width:2}
+.note{font-size:12px;color:#ffd0d6;border-left:3px solid var(--red);padding-left:8px;margin:10px 0}
+#tr{min-height:190px;font-size:12.5px;line-height:1.6;white-space:pre-wrap}
+.final{text-align:center;border:2px solid var(--red);border-radius:12px;padding:26px 12px;margin:18px 0;background:rgba(255,31,61,.08);box-shadow:0 0 28px var(--red),inset 0 0 28px rgba(255,31,61,.3)}
+.final h2{color:var(--red);text-shadow:0 0 12px var(--red)}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{flex:1 1 140px;text-align:center;padding:14px;border:1px solid var(--grn);color:var(--grn);text-decoration:none;border-radius:8px;font-weight:bold;background:#000}
+.btn.wa{background:var(--grn);color:#000}
+.tag{text-align:center;font-size:12px;color:#7fbf9f;margin-top:20px;letter-spacing:3px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="rain"></canvas><div class="scan"></div>
+<a id="leave" href="https://www.google.com" aria-label="Leave this page">✕ Exit</a>
+<button id="snd" type="button" aria-pressed="false">🔇 Sound off</button>
+
+<section id="intro">
+  <div class="warn"></div>
+  <h1 class="glitch">YOUR MOBILE IS HACKED</h1>
+  <svg class="skull" viewBox="0 0 100 100" aria-hidden="true"><path fill="none" stroke="#ff1f3d" stroke-width="3" d="M50 8C27 8 14 24 14 44c0 12 6 20 14 25v13h10v-8h8v8h10v-8h8v8h10V69c8-5 14-13 14-25C86 24 73 8 50 8z"/><circle cx="34" cy="46" r="9" fill="#ff1f3d"/><circle cx="66" cy="46" r="9" fill="#ff1f3d"/><path d="M50 56l-5 10h10z" fill="#ff1f3d"/></svg>
+  <div class="ring"><svg width="130" height="130" viewBox="0 0 130 130"><circle cx="65" cy="65" r="56" fill="none" stroke="#12301f" stroke-width="8"/><circle id="arc" cx="65" cy="65" r="56" fill="none" stroke="#00ff7f" stroke-width="8" stroke-dasharray="352" stroke-dashoffset="352" stroke-linecap="round"/></svg><b id="pct">0%</b></div>
+  <div class="bar"><i id="fill"></i></div>
+  <div class="term cur" id="log" aria-live="polite"></div>
+  <div class="warn"></div>
+</section>
+
+<section id="report">
+  <h2>CYBER SYSTEM ANALYSIS</h2>
+  <div class="sub">DARK SHADOW · browser-based demonstration</div>
+
+  <div class="card"><h3>A. SIMULATION STATUS</h3>
+    <div class="row"><span>Status</span><span class="ok">Analysis Complete</span></div>
+    <div class="row"><span>Environment</span><span>Browser-Based Simulation</span></div>
+    <div class="row"><span>Session</span><span class="ok">Active</span></div>
+    <div class="row"><span>Report</span><span class="ok">Generated</span></div>
+  </div>
+
+  <div class="card"><h3>B. SECURITY DASHBOARD</h3>
+    <div class="row"><span>Virtual firewall</span><span class="ok">ONLINE (demo)</span></div>
+    <div class="row"><span>Fictional network activity</span><span id="net">0 kb/s</span></div>
+    <div class="row"><span>Demo encryption</span><span class="ok">AES-256 (fictional)</span></div>
+    <div class="row"><span>Simulated diagnostics</span><span class="ok">PASS</span></div>
+    <div class="row"><span>Virtual server link</span><span class="ok">CONNECTED (fake)</span></div>
+    <div class="meter" aria-hidden="true"><i></i></div>
+    <div class="grid">
+      <div class="radar" aria-hidden="true"></div>
+      <svg class="net" viewBox="0 0 160 140" aria-hidden="true"><line x1="80" y1="70" x2="25" y2="25"/><line x1="80" y1="70" x2="135" y2="25"/><line x1="80" y1="70" x2="25" y2="115"/><line x1="80" y1="70" x2="135" y2="115"/><circle cx="80" cy="70" r="12"/><circle cx="25" cy="25" r="8"/><circle cx="135" cy="25" r="8"/><circle cx="25" cy="115" r="8"/><circle cx="135" cy="115" r="8"/></svg>
+    </div>
+  </div>
+
+  <div class="card"><h3>C. TECHNICAL REPORT</h3>
+    <div id="tr" class="cur"></div>
+    <p class="note">All results above are fictional demo output generated in this browser. No files, passwords, contacts or phone settings were accessed, and nothing is collected or sent.</p>
+  </div>
+
+  <div class="final"><h2>SYSTEM ANALYSIS COMPLETE</h2><div>Cyber simulation report generated successfully.</div></div>
+
+  <div class="card"><h3>CONTACT</h3>
+    <div class="row"><span>Phone</span><span>03143655804</span></div>
+    <div class="row"><span>WhatsApp</span><span>+92 314 3655804</span></div>
+    <div class="btns" style="margin-top:12px">
+      <a class="btn wa" href="https://wa.me/923143655804" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn" href="tel:+923143655804">Call</a>
+      <a class="btn" href="https://www.google.com">Leave page</a>
+    </div>
+  </div>
+  <div class="tag">DARK SHADOW — ENTER THE SIMULATION</div>
+</section>
+
+<script>
+(function(){
+var RM=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var $=function(i){return document.getElementById(i)};
+// matrix rain
+var cv=$("rain"),cx=cv.getContext("2d"),cols,drops,fs=16,ch="01ABCDEF$#<>/\\{}[]";
+function size(){cv.width=innerWidth;cv.height=innerHeight;cols=Math.ceil(cv.width/fs);drops=Array.from({length:cols},function(){return Math.random()*-40})}
+size();addEventListener("resize",size);
+function rain(){cx.fillStyle="rgba(3,3,4,.12)";cx.fillRect(0,0,cv.width,cv.height);cx.fillStyle="#00ff7f";cx.font=fs+"px monospace";
+for(var i=0;i<cols;i++){cx.fillText(ch[Math.floor(Math.random()*ch.length)],i*fs,drops[i]*fs);if(drops[i]*fs>cv.height&&Math.random()>.975)drops[i]=0;drops[i]++}}
+if(!RM)setInterval(rain,60);
+// sound (off by default)
+var AC=null,on=false;
+$("snd").onclick=function(){on=!on;this.textContent=on?"🔊 Sound on":"🔇 Sound off";this.setAttribute("aria-pressed",on);if(on&&!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}};
+function beep(f){if(!on||!AC)return;var o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;g.gain.value=.03;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.08)}
+// typing helper
+function type(el,text,speed,done){var i=0;(function t(){if(i<text.length){el.textContent+=text.charAt(i++);if(i%3==0)beep(700);setTimeout(t,speed)}else if(done)done()})()}
+// loading
+var msgs=["INITIALIZING CYBER SYSTEM...","ESTABLISHING VIRTUAL CONNECTION...","STARTING SECURITY SIMULATION...","ANALYZING DEMONSTRATION DATA...","GENERATING SYSTEM REPORT...","PROCESSING SIMULATION RESULTS...","LOADING COMPLETE: 100%"];
+var log=$("log"),intro=$("intro");
+if(!RM)intro.classList.add("shake");
+var DUR=RM?1500:15000,t0=performance.now(),mi=0,finished=false;
+function nextMsg(){if(mi>=msgs.length)return;var d=document.createElement("div");log.insertBefore(d,null);var s=msgs[mi++];type(d,"> "+s,RM?0:22,function(){setTimeout(nextMsg,RM?0:DUR/msgs.length-s.length*22)})}
+nextMsg();
+function frame(now){var p=Math.min(1,(now-t0)/DUR),e=p*100;
+$("pct").textContent=Math.floor(e)+"%";$("fill").style.width=e+"%";$("arc").style.strokeDashoffset=352*(1-p);
+if(p<1)requestAnimationFrame(frame);else if(!finished){finished=true;setTimeout(showReport,900)}}
+requestAnimationFrame(frame);
+// report
+function showReport(){intro.style.opacity=0;setTimeout(function(){intro.style.display="none";var r=$("report");r.style.display="block";window.scrollTo(0,0);requestAnimationFrame(function(){r.classList.add("on")});runReport()},RM?0:1000)}
+function runReport(){
+setInterval(function(){$("net").textContent=(Math.floor(Math.random()*900)+100)+" kb/s (fake)"},900);
+var lines=["[01] Fictional scan stage 1 ... done","[02] Virtual network check ... OK (demo)","[03] Simulated security indicators ... green","[04] Demo encryption handshake ... complete","[05] Virtual server ping ... 12ms (fictional)","[06] Demonstration tasks ... 6/6 completed","[07] Real device data accessed ... NONE","[08] Report status ... READY"];
+var el=$("tr"),i=0;(function nx(){if(i<lines.length){var s=lines[i++]+"\n";type(el,s,RM?0:18,function(){setTimeout(nx,RM?0:250)})}else el.classList.remove("cur")})()}
+})();
+</script>
+</body>
+</html>
